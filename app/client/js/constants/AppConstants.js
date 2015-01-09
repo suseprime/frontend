@@ -1,11 +1,11 @@
-var keyMirror = require('keymirror');
+const keyMirror = require('keymirror');
 
 export const CHANGE_EVENT = 'change';
 
 export const ActionTypes = keyMirror({
-	LOGIN: null,
-	LOGIN_COMPLETE: null,
-	LOGIN_FAIL: null,
+	SIGNIN: null,
+	SIGNIN_COMPLETE: null,
+	SIGNIN_FAIL: null,
 
 	SEND_CHAT_REQUEST: null,
 	SEND_CHAT_REQUEST_COMPLETE: null,
@@ -26,5 +26,8 @@ export const ActionTypes = keyMirror({
 
 	LOGOUT: null,
 	LOGOUT_COMPLETE: null,
-	LOGOUT_FAIL: null
+	LOGOUT_FAIL: null,
+
+	ADD_NOTIFICATION: null,
+	REMOVE_NOTIFICATION: null
 });

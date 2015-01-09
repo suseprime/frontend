@@ -1,0 +1,194 @@
+@import url("./lesshat.less");
+
+body {
+	padding: 0px;
+	margin: 0px;
+	font-family: 'Roboto', sans-serif;
+	color: white;
+	font-size: 14px;
+	line-height: 20px;
+}
+
+
+.page() {
+	width: 100%;
+	box-sizing: border-box;
+}
+
+#home {
+	.heading {
+		.page();
+		height: 600px;
+		position: relative;
+
+
+		.bg {
+			height: 100%;
+			width: 100%;
+			background-image: url('images/bg-pattern.png');
+			background-color: #2b292a;
+			background-repeat: repeat;
+			background-size: 105px;
+			background-attachment: fixed;
+			-webkit-filter: blur(0px);
+			-moz-filter: blur(0px);
+			-ms-filter: blur(0px);
+			filter: blur(0px);
+		}
+
+		.content {
+			background-image: linear-gradient(rgba(0,0,0,1), rgba(0,0,0,0.3), rgba(0,0,0,0));
+			background-attachment: fixed;
+			padding-top: 200px;
+			position: absolute;
+			top: 0;
+			height: 100%;
+			width: 100%;
+			-webkit-box-sizing: border-box;
+			box-sizing: border-box;
+			text-align: center;
+			color: white;
+
+			h1 {
+				margin: 0px auto 10px;
+				font-size: 63px;
+				line-height: 44px;
+				font-weight: 100;
+				text-shadow: black 2px 2px 13px;
+			}
+
+			p {
+				font-weight: 100;
+				font-style: italic;
+				font-size: 30px;
+				text-shadow: black 2px 2px 13px;
+			}
+
+			@input-color: grey;
+			input[type=text] {
+				background: @input-color;
+				border: none;
+				padding: 20px;
+				border-radius: 5px;
+				color: white;
+				opacity: .6;
+				transition: all .3s;
+				// transition-delay: .3s;
+				margin: 0;
+
+				&:focus, &:valid {
+					opacity: 0.8;
+					border: none;
+					outline: none;
+					border-top-right-radius: 0;
+					border-bottom-right-radius: 0;
+				}
+			}
+
+			input[type=submit] {
+				background: @input-color;
+				border: none;
+				padding: 0;
+				border-top-right-radius: 5px;
+				border-bottom-right-radius: 5px;
+				color: white;
+				opacity: 0;
+				margin: 0;
+				font-size: 0;
+				margin-left: -4px;
+				width: 0;
+				transition: all .3s;
+				// transition-delay: .3s;
+			}
+
+			input[type=text]:focus + input[type=submit], input[type=text]:valid + input[type=submit]{
+				display: inline-block;
+				opacity: .9;
+				width: 80px;
+				padding: 20px;
+				transition: all .3s;
+				font-size: 13px;
+			}
+		}
+	}
+
+	.body {
+		.page();
+		text-align: center;
+		background-color: #2b292a;
+		padding: 100px 100px 100px 100px;
+
+		.row {
+			margin: 0 auto 100px auto;
+			min-height: 200px;
+			max-width: 800px;
+
+			.image {
+				position: relative;
+				width: 0;
+				height: 200px;
+				float: left;
+				margin: 0;
+
+				&.onScreen::after {
+					left: 0;
+					transition: all 1s;
+				}
+				&.lock::after {
+					background-image: url(images/lock.svg);
+				}
+				&.server.onScreen::after {
+					background-image: url(images/server-secure.svg);
+					background-position: -30px;
+					background-size: 230px;
+				}
+
+			}
+
+			.image::after {
+				content: " ";
+				position: absolute;
+				display: block;
+
+				float: left;
+				height: 200px;
+				width: 200px;
+				background-size: contain;
+				background-repeat: no-repeat;
+				left: -50vw;
+
+				.filter(invert(75%));
+			}
+
+			.text {
+				text-align: left;
+				float: none;
+				margin-left: 300px;
+
+				h3 {
+					font-size: 48px;
+					line-height: 48px;
+					margin: 0;
+				}
+
+				p {
+					font-size: 18px;
+					line-height: 24px;
+					font-weight: 300;
+					text-indent: 20px;
+					max-width: 500px;
+				}
+			}
+		}
+
+	}
+
+	footer {
+		background-color: #2b292a;
+		text-align: center;
+		padding-top: 20px;
+		font-weight: 200;
+		font-size: 18px;
+		line-height: 30px;
+	}
+}

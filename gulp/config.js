@@ -1,9 +1,18 @@
 var reactify = require('reactify');
 var envify = require('envify');
 var es6ify = require('es6ify');
+var LessPluginAutoPrefix = require('less-plugin-autoprefix'),
+    autoprefix= new LessPluginAutoPrefix({browsers: ["last 2 versions"]});
 
 var dest = './build';
 var src = './app';
+
+es6ify.traceurOverrides = {
+	annotations: true,
+	arrayComprehension: true,
+	asyncFunctions: true,
+	require: true
+};
 
 module.exports = {
 	server: {
@@ -16,7 +25,7 @@ module.exports = {
 		}
 	},
 	images: {
-		src: src + "/images/**",
+		src: src + "/client/images/**",
 		dest: dest + "/images"
 	},
 	browserify: {
@@ -26,13 +35,14 @@ module.exports = {
 			outputName: 'app.js',
 			require: [ 'react', 'lodash' ]
 		}],
-		transform: [ reactify, es6ify, envify ]
+		transform: [ es6ify, envify ]
 	},
 	less: {
-		src: src + '/less/*.{less}',
+		src: src + '/client/less/main.less',
 		dest: dest,
 		settings: {
-			paths: [ src + '/less/includes' ]
+			paths: [ src + '/less/includes' ],
+			plugins: [autoprefix]
 		}
 	},
 	production: {

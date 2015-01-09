@@ -1,12 +1,14 @@
 import EventEmitter from 'events';
 import { CHANGE_EVENT, ActionTypes } from '../constants/AppConstants';
-import { Dispatcher } from 'flux';
 
 export class BaseStore extends EventEmitter {
-	constructor() {
-		this._dispatchToken = Dispatcher.register(this._registerEvents.bind(this));
-
+	constructor(dispatcher) {
 		super();
+
+		this._dispatcher = dispatcher;
+		this._dispatchToken = dispatcher.register(this._registerEvents.bind(this));
+		this._listeners = {};
+		this._notifiers = {};
 	}
 
 	_registerEvents(payload) {
@@ -50,12 +52,12 @@ export class BaseStore extends EventEmitter {
 		this._notifiers = { waitFor: waitFor };
 	}
 
+	_runAfter(fn) {
+		setTimeout(fn, 0);
+	}
+
 
 	get dispatchToken() {
 		return this._dispatchToken;
-	}
-
-	hi() {
-		console.log(this);
 	}
 }
