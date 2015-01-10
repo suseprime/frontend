@@ -2,14 +2,13 @@ import { OTR, DSA } from 'otr';
 import guid from 'node-uuid';
 import EventEmitter from 'events';
 import { Inject } from '../../../external/di';
-import { ActionTypes } from '../constants/AppConstants';
-const Dispatcher = require('flux').Dispatcher;
+import { ChatActions } from '../actions/ChatActions';
 
-@Inject(Dispatcher)
+@Inject(ChatActions)
 export class Client extends EventEmitter {
-	constructor(dispatcher) {
+	constructor(chatActions) {
 		let key = new DSA();
-		this._dispatcher = dispatcher;
+		this._chatActions = chatActions;
 
 		this._server = {
 			key: key,
@@ -139,7 +138,7 @@ export class Client extends EventEmitter {
 		});
 
 		buddy.on('ui', (msg, encrypted) => {
-			this._dispatcher.handleServerAction(AppConstants.RECEIVE_MESSAGE, { chatId: chatId, message: msg });
+			this._chatActions.receiveMessage(msg, chatId, guid.v4());
 		});
 
 		buddy.on('io', (msg, meta) => {
