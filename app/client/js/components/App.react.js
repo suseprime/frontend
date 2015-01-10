@@ -14,7 +14,7 @@ export class App {
 					div({ className: "image onScreen " + this.props.name }),
 					div({ className: "text" },
 						h3(null, this.props.title),
-						this.props.content));				
+						p(null, this.props.content)));
 			}
 		}
 
@@ -33,7 +33,7 @@ export class App {
 							h1(null, "Suseprime"),
 							p(null, "super secret private messaging"),
 							form(null,
-								input({ type: "text", name: "nick", placeholder: "Nick", required: true, autocomplete: "off" }),
+								input({ type: "text", name: "nick", placeholder: "Nick", required: true, autoComplete: "off" }),
 								input({ type: "submit", value: "Sign in", onClick: this.onSignInClick })))),
 					div({ className: "body" },
 						[
