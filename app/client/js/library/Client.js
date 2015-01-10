@@ -91,7 +91,30 @@ export class Client extends EventEmitter {
 	}
 
 	_handleChatEstablished(body) {
-		this._chatActions.chatEstablished(body['chat-id'], body['target-username'])
+		this._chatActions.chatEstablished(body['chat-id'], body['target-username']);
+		if(typeof body['request-id'] === 'undefined') {
+			let chatId = body['chat-id'];
+			this._clients[chatId] = new OTR({
+				fragment_size: 140,
+				send_interval: 200,
+				priv: key
+			});
+
+			buddy.on('ui', (msg, encrypted) => {
+				this._chatActions.receiveMessage(msg, chatId, guid.v4());
+			});
+
+			buddy.on('io', (msg, meta) => {
+				let msg = {
+					'type': 'message',
+					'message': msg,
+					'chat-id': chatId
+				};
+				this._sendMessage(msg);
+			});
+
+			this._clients[chatId].REQUIRE_ENCRYPTION = true;
+		}
 	}
 
 	_handleChatMessage(body) {
