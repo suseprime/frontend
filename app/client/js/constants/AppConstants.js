@@ -20,6 +20,8 @@ export const ActionTypes = keyMirror({
 	ACCEPT_CHAT_REQUEST_COMPLETE: null,
 	ACCEPT_CHAT_REQUEST_FAIL: null,
 
+	RECEIVE_MESSAGE: null,
+
 	SEND_MESSAGE: null,
 	SEND_MESSAGE_COMPLETE: null,
 	SEND_MESSAGE_FAIL: null,

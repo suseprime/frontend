@@ -1,9 +1,15 @@
 import { OTR, DSA } from 'otr';
 import guid from 'node-uuid';
 import EventEmitter from 'events';
+import { Inject } from '../../../external/di';
+import { ActionTypes } from '../constants/AppConstants';
+const Dispatcher = require('flux').Dispatcher;
 
+@Inject(Dispatcher)
 export class Client extends EventEmitter {
-	constructor() {
+	constructor(dispatcher) {
+		this._dispatcher = dispatcher;
+
 		let serverKey = new DSA();
 		let clientKey = new DSA();
 
@@ -88,7 +94,7 @@ export class Client extends EventEmitter {
 	}
 
 	_handleChatMessage(body) {
-
+		// this._dispatcher.handleServerAction(AppConstants.RECEIVE_MESSAGE, { chatId: null, messageId: null, message: null })
 	}
 
 	async signin(name, password) {
