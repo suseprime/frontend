@@ -77,10 +77,22 @@ export class Client extends EventEmitter {
 
 			if(body.type == 'message') {
 				this._handleChatMessage(body);
+			} else if (body.type == 'chat-established') {
+				this._handleChatEstablished(body);
+			} else if (body.type == 'chat-request') {
+				this._handleChatRequest(body);
 			}
 		} catch (e) {
 			console.log(e.stack);
 		}
+	}
+
+	_handleChatRequest(body) {
+		this._chatActions.chatRequested(body['chat-id'], body['from-username']);
+	}
+
+	_handleChatEstablished(body) {
+		this._chatActions.chatEstablished(body['chat-id'], body['target-username'])
 	}
 
 	_handleChatMessage(body) {
@@ -141,7 +153,7 @@ export class Client extends EventEmitter {
 
 		this._clients[chatId].REQUIRE_ENCRYPTION = true;
 		this._clients[chatId].sendQueryMsg();
-		return true;
+		return body;
 	}
 
 	async status() {

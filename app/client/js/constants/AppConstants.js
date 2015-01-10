@@ -13,12 +13,13 @@ export const ActionTypes = keyMirror({
 
 	CLOSE_CHAT: null,
 
-	CHAT_REQUEST_ACCEPTED: null,
-	CHAT_REQUEST_REJECTED: null,
+	CHAT_ESTABLISHED: null,
 
 	ACCEPT_CHAT_REQUEST: null,
 	ACCEPT_CHAT_REQUEST_COMPLETE: null,
 	ACCEPT_CHAT_REQUEST_FAIL: null,
+
+	REJECT_CHAT_REQUEST: null,
 
 	RECEIVE_MESSAGE: null,
 
