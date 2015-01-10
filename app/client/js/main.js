@@ -12,6 +12,8 @@ const client = injector.get(Client);
 
 client.host = "ws://suseprime-backend.jit.su:80";
 
+console.log('change');
+
 window.React = React;
 
 React.render(app.component(), document.getElementById('app'));

@@ -20,12 +20,11 @@ export class Client extends EventEmitter {
 
 		this._clients = {};
 
-		this._server.otr.on('ui', this._messageReceived);
+		this._server.otr.REQUIRE_ENCRYPTION = true
+		this._server.otr.on('ui', this._messageReceived.bind(this));
 
 		this._server.otr.on('io', (msg, meta) => {
-			console.log('to WS', msg)
-
-			if (this._ws != null && this._status != 'opened') {
+			if (this._ws != null && this._status == 'opened') {
 				this._ws.send(msg);
 			}
 		});
@@ -61,9 +60,7 @@ export class Client extends EventEmitter {
 	}
 
 	async _sendMessageAndWaitForResponse(data, type) {
-		let message = await this._waitForMessageWithId(this._sendMessage(data));
-
-		console.log(message);
+		let message = await this._waitForMessageWithId(await this._sendMessage(data));
 
 		if (message.type == 'error') {
 			throw new Exception("Server responded with error", message);
@@ -232,7 +229,6 @@ export class Client extends EventEmitter {
 
 		this._ws_promise = new Promise((res, rej) => {
 			this._ws.onopen = () => {
-				this._server.otr.sendQueryMsg();
 				this._status = 'opened';
 
 				setTimeout(() => res(), 0);
@@ -244,7 +240,6 @@ export class Client extends EventEmitter {
 		}
 
 		this._ws.onmessage = (data) => {
-			console.log("from WS", data.data);
 			this._server.otr.receiveMsg(data.data);
 		}
 
