@@ -1,6 +1,5 @@
 const Dispatcher = require('flux').Dispatcher;
 import { ActionTypes } from '../constants/AppConstants';
-import EventEmitter from 'events';
 import { BaseStore } from './BaseStore';
 import { Inject } from '../../../external/di';
 import { NotificationActions } from '../actions/NotificationActions';
@@ -13,10 +12,20 @@ export class UserStateStore extends BaseStore {
 		this._notificationActions = notificationActions;
 
 		this.listenOnAsyncAction(ActionTypes.SIGNIN, this.onSignInStarted, this.onSignInCompleted, this.onSignInFailed);
+		this.listenOnAsyncAction(ActionTypes.SIGNOUT, this.onSignOutStarted, this.onSignOutCompleted, this.onSignOutFailed);
 
 		this.signInState = 'null';
 	}
 
+	onSignOutStarted(data) {}
+
+	onSignOutCompleted(data) {
+		this.signInState = 'null';
+	}
+
+	onSignOutFailed(data) {
+		this.signInState = 'fail';
+	}
 
 	onSignInStarted(data) {
 		this.signInState = 'init';

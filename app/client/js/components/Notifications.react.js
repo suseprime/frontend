@@ -9,6 +9,8 @@ export class Notifications {
 		let { div, span, i, CSSTransitionGroup } = elements;
 
 		class _Notificatons {
+			get displayName() { return "Notifications" }
+
 			componentDidMount() {
 				store.listen('change', this.onDataChange);
 			}

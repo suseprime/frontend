@@ -18,14 +18,14 @@ export class ServerChatActions {
 	}
 
 	chatRequested(chatId, fromName) {
-		this._dispatcher.handleServerAction(AppConstants.CHAT_REQUESTED, {
+		this._dispatcher.handleServerAction(ActionTypes.CHAT_REQUESTED, {
 			fromName: fromName,
 			chatId: chatId
 		});
 	}
 
-	chateEstablished(chatId, targetName) {
-		this._dispatcher.handleServerAction(AppConstants.CHAT_ESTABLISHED, { 
+	chatEstablished(chatId, targetName) {
+		this._dispatcher.handleServerAction(ActionTypes.CHAT_ESTABLISHED, { 
 			chatId: chatId,
 			targetName: targetName
 		});		

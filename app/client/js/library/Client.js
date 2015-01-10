@@ -7,6 +7,7 @@ import { ServerChatActions } from '../actions/ServerChatActions';
 export class Client extends EventEmitter {
 	constructor(chatActions) {
 		let key = new DSA();
+		this._key;
 		this._chatActions = chatActions;
 
 		this._server = {
@@ -62,10 +63,8 @@ export class Client extends EventEmitter {
 	async _sendMessageAndWaitForResponse(data, type) {
 		let message = await this._waitForMessageWithId(await this._sendMessage(data));
 
-		if (message.type == 'error') {
-			throw new Exception("Server responded with error", message);
-		} else if (message.type != type) {
-			throw new Exception("Server responded with unknow message", message)
+		if (message.type == 'error' || message.type != type) {
+			throw message;
 		} else {
 			return message;
 		}
@@ -99,8 +98,10 @@ export class Client extends EventEmitter {
 			this._clients[chatId] = new OTR({
 				fragment_size: 140,
 				send_interval: 200,
-				priv: key
+				priv: this._key
 			});
+
+			let buddy = this._clients[chatId];
 
 			buddy.on('ui', (msg, encrypted) => {
 				this._chatActions.receiveMessage(msg, chatId, guid.v4());
@@ -115,7 +116,7 @@ export class Client extends EventEmitter {
 				this._sendMessage(msg);
 			});
 
-			this._clients[chatId].REQUIRE_ENCRYPTION = true;
+			buddy.REQUIRE_ENCRYPTION = true;
 		}
 	}
 
@@ -154,13 +155,15 @@ export class Client extends EventEmitter {
 			'chat-id': chatId
 		}
 
-		let body = await this._sendMessageAndWaitForResponse(msg, 'chat-established');
+		let body = await this._sendMessageAndWaitForResponse(msg, 'chat-request-accepted-sucessed');
 		chatId = body['chat-id'];
 		this._clients[chatId] = new OTR({
 			fragment_size: 140,
 			send_interval: 200,
-			priv: key
+			priv: this._key
 		});
+
+		let buddy = this._clients[chatId];
 
 		buddy.on('ui', (message, encrypted) => {
 			this._chatActions.receiveMessage(message, chatId, guid.v4());

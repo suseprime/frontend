@@ -10,6 +10,8 @@ export class HomePage {
 		let { div, h1, h3, p, form, input, footer } = elements;
 
 		class _Row {
+			get displayName() { return "Row" }
+
 			render() {
 				return div({ className: 'row' },
 					div({ className: 'image onScreen ' + this.props.name }),
@@ -22,6 +24,8 @@ export class HomePage {
 		const Row = React.createFactory(React.createClass(_Row.prototype));
 
 		class _HomePage {
+			get displayName() { return "HomePage" }
+
 			componentDidMount() {
 				userStateStore.listen('change', this.onDataChange);
 			}
@@ -45,15 +49,28 @@ export class HomePage {
 			}
 
 			render() {
+				let progress = null;
+
+				switch(userStateStore.signInState) {
+					case 'init':
+						progress = p(null, 'Loading');
+						break;
+					case 'fail':
+						progress = p(null, 'There was some error');
+						break;
+					default:
+						progress = form({ onSubmit: this.onFormSubmit },
+								input({ ref: 'nick', type: 'text', name: 'nick', placeholder: 'Nick', required: true, autoComplete: 'off' }),
+								input({ type: 'submit', value: 'Sign in' }));
+				}
+
 				return div({ id: 'home' },
 					div({ className: 'heading' },
 						div({ className: 'bg' }),
 						div({ className: 'content' },
 							h1(null, 'Suseprime'),
 							p(null, 'super secret private messaging'),
-							form({ onSubmit: this.onFormSubmit },
-								input({ ref: 'nick', type: 'text', name: 'nick', placeholder: 'Nick', required: true, autoComplete: 'off' }),
-								input({ type: 'submit', value: 'Sign in' })))),
+							progress)),
 					div({ className: 'body' },
 						[
 							{

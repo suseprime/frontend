@@ -16,20 +16,14 @@ export class UserActions {
 			password: password
 		});
 
-		console.log(name);
-
 		this._client.signin(name, password).then((resp) => {
 			this._dispatcher.handleViewAction(ActionTypes.SIGNIN_COMPLETE, {
 				name: name,
 				password: password
 			});
-
-			console.log(resp);
 		}, (err) => {
 			this._dispatcher.handleViewAction(ActionTypes.SIGNIN_FAIL, err);
-
-			console.error(err);
-		});
+		}).catch(x => console.error(x));
 	}
 
 	signout(password) {
@@ -43,6 +37,6 @@ export class UserActions {
 			});
 		}, (err) => {
 			this._dispatcher.handleViewAction(ActionTypes.SIGNOUT_FAIL, err);
-		})
+		}).catch(x => console.error(x));
 	}
 }

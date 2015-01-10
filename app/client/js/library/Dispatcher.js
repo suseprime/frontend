@@ -8,6 +8,12 @@ export class SuseDispatcher extends Dispatcher {
 		super(...args);
 	}
 
+	dispatch(data) {
+		console.log(data.action.type, data.action.data);
+
+		super.dispatch(data);
+	}
+
 	handleServerAction(type, data) {
 		this.dispatch({
 			source: PayloadSources.SERVER_ACTION,

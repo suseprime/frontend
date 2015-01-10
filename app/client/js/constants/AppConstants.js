@@ -14,6 +14,7 @@ export const ActionTypes = keyMirror({
 	CLOSE_CHAT: null,
 
 	CHAT_ESTABLISHED: null,
+	CHAT_REQUESTED: null,
 
 	ACCEPT_CHAT_REQUEST: null,
 	ACCEPT_CHAT_REQUEST_COMPLETE: null,
@@ -33,7 +34,9 @@ export const ActionTypes = keyMirror({
 
 	ADD_NOTIFICATION: null,
 	REMOVE_NOTIFICATION: null,
-	CLICK_NOTIFICATION: null
+	CLICK_NOTIFICATION: null,
+
+	SELECT_CHAT: null
 });
 
 export const PayloadSources = keyMirror({

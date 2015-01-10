@@ -4,15 +4,16 @@ import { Injector, Provide } from '../../external/di';
 import { Element } from './library/react/element.js';
 import { SuseDispatcher } from './library/Dispatcher';
 import { Client } from './library/Client.js';
+import Modal from 'react-modal'
 
 const injector = new Injector([SuseDispatcher]);
 const app = injector.get(App);
 const elements = injector.get(Element);
 const client = injector.get(Client);
 
-client.host = "ws://suseprime-backend.jit.su:80";
+Modal.setAppElement(document.getElementById('app'));
 
-console.log('change');
+client.host = "ws://suseprime-backend.jit.su:80";
 
 window.React = React;
 

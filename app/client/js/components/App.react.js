@@ -2,15 +2,18 @@ const React = require('react')
 import { Inject } from '../../../external/di';
 import { Element } from '../library/react/element.js';
 import { UserStateStore } from '../stores/UserStateStore';
-import { HomePage } from './HomePage.react'
-import { Notifications } from './Notifications.react'
+import { HomePage } from './HomePage.react';
+import { ChatPage } from './ChatPage.react';
+import { Notifications } from './Notifications.react';
 
-@Inject(Element, UserStateStore, HomePage, Notifications)
+@Inject(Element, UserStateStore, HomePage, ChatPage, Notifications)
 export class App {
-	constructor(elements, userStateStore, homePage, notifications) {
+	constructor(elements, userStateStore, homePage, chatPage, notifications) {
 		let { div } = elements;
 
 		class _App {
+			get displayName() { return "App" }
+
 			componentDidMount() {
 				userStateStore.listen('change', this.onDataChange);
 			}
@@ -24,7 +27,7 @@ export class App {
 			}
 
 			render() {
-				let page = userStateStore.loginState == 'complete' ? chatPage : homePage;
+				let page = userStateStore.signInState == 'complete' ? chatPage : homePage;
 
 				return div(null, 
 					page.component(),

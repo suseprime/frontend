@@ -1,0 +1,144 @@
+
+@bg-color: #2b292a;
+@nav-height: 60px;
+
+#chat {
+  .templates {
+    display: none !important;
+  }
+
+  nav {
+    @nav-padding: 10px;
+    @nav-height-content: calc(@nav-height - 2 * @nav-padding);
+    color: white;
+    height: 80px;
+    background: @bg-color;
+    margin: 0;
+    line-height: @nav-height-content;
+    padding: @nav-padding;
+    font-size: 20px;
+    z-index: 100000;
+    color: rgba(255,255,255,.7);
+
+    h1 {
+      font-size: inherit;
+      line-height: inherit;
+      margin: 0;
+      display: inline;
+      font-weight: inherit;
+      float: left;
+      font-weight: 300;
+      color: rgba(255,255,255,.7);
+    }
+
+    a {
+      color: inherit;
+      text-decoration: inherit;
+      transition: all .5s;
+    }
+
+    a:hover {
+      color: rgba(255,255,255,1);
+    }
+
+    .right {
+      font-size: 15px;
+      float: right;
+      text-align: right;
+      display: inline-block;
+    }
+
+    .second-row {
+      display: inline-block;
+      position: fixed;
+      top: 50px;
+      right: 20px;
+      color: white;
+      z-index: 100;
+    }
+  }
+
+  (.form textarea) + (.name) {
+    background: red;
+  }
+  .chats {
+    .display(flex);
+    height: calc(~"100vh - "@nav-height);
+    position: fixed;
+    top: 60px;
+    left: 0;
+    right: 0;
+
+    .chat {
+      .flex-grow(1);
+      .flex-shrink(0);
+      .flex-basis(0px);
+      .display(flex);
+      .flex-direction(column);
+      height: 100%;
+
+      .name {
+        background: @bg-color;
+        color: white;
+        height: 30px;
+        .flex-basis(30px);
+        .flex-shrink(0);
+        text-align: center;
+        padding-bottom: 10px;
+      }
+
+      .content {
+        .flex-grow(1);
+        overflow-y: scroll;
+
+        .message {
+          padding: 5px;
+          margin: 10px 20px;
+          border: 1px solid grey;
+          border-radius: 20px;
+          float: left;
+          clear: both;
+
+          &.my {
+            float: right;
+          }
+        }
+      }
+
+
+      .form {
+        box-sizing: content-box;
+        width: 100%;
+        min-height: 100px;
+        .flex-basis(100px);
+        .flex-grow(0);
+        .flex-shrink(0);
+        text-align: center;
+        display: flex;
+        border-top: 1px solid @bg-color;
+
+        textarea {
+          box-sizing: padding-box;
+          max-height: 100%;
+          width: auto;
+          .flex-grow(5);
+          border: none;
+          outline: none;
+          padding: 10px;
+        }
+        input[type=submit] {
+          box-sizing: content-box;
+          height: inherit;
+          width: 60px;
+          padding: 0;
+          .flex-grow(1);
+          background: @bg-color;
+          color: white;
+          border: none;
+          outline: none;
+
+        }
+      }
+    }
+  }
+}

@@ -2,11 +2,12 @@ const Dispatcher = require('flux').Dispatcher;
 import { Inject } from '../../../external/di';
 import { ActionTypes } from '../constants/AppConstants';
 import { Client } from '../library/Client.js';
+import { NotificationActions } from './NotificationActions';
 import guid from 'node-uuid';
 
-@Inject(Dispatcher, Client)
+@Inject(Dispatcher, Client, NotificationActions)
 export class ChatActions {
-	constructor(dispatcher, client) {
+	constructor(dispatcher, client, notificationActions) {
 		this._dispatcher = dispatcher;
 		this._client = client;
 	}
@@ -22,8 +23,11 @@ export class ChatActions {
 				chatId: resp['chat-id']
 			});
 		}, (err) => {
-			this._dispatcher.handleViewAction(ActionTypes.SEND_CHAT_REQUEST_FAIL, err);
-		});
+			this._dispatcher.handleViewAction(ActionTypes.SEND_CHAT_REQUEST_FAIL, { 
+				name: name,
+				error: err
+			});
+		}).catch(x => console.error(x));
 	}
 
 	acceptChatRequest(chatId) {
@@ -33,11 +37,20 @@ export class ChatActions {
 
 		this._client.acceptChat(chatId).then((resp) => {
 			this._dispatcher.handleViewAction(ActionTypes.ACCEPT_CHAT_REQUEST_COMPLETE, {
-				chatId: resp['chet-id']
+				chatId: resp['chat-id']
 			});
 		}, (err) => {
-			this._dispatcher.handleViewAction(ActionTypes.ACCEPT_CHAT_REQUEST_FAIL, err);
-		})
+			this._dispatcher.handleViewAction(ActionTypes.ACCEPT_CHAT_REQUEST_FAIL, {
+				chatId: chatId,
+				error: err
+			});
+		}).catch(x => console.error(x));
+	}
+
+	selectChat(chatId) {
+		this._dispatcher.handleViewAction(ActionTypes.SELECT_CHAT, {
+			'id': chatId
+		});
 	}
 
 	message(message, chatId) {
@@ -56,7 +69,10 @@ export class ChatActions {
 				chatId: chatId
 			});
 		}, (err) => {
-			this._dispatcher.handleViewAction(ActionTypes.SEND_MESSAGE_FAIL, err);
-		});
+			this._dispatcher.handleViewAction(ActionTypes.SEND_MESSAGE_FAIL, {
+				messageId: messageId,
+				error: err
+			});
+		}).catch(x => console.error(x));
 	}
 }

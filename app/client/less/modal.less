@@ -1,0 +1,93 @@
+@import url("./lesshat.less");
+
+.keyframes(~'modalFlyIn, from {top: -50%;} to {top: 50%;}');
+.keyframes(~'modalFlyOut, from {top: 50%;} to {top: 150%;}');
+.keyframes(~'modalBgFadeIn, from {opacity: 0;} to {opacity: 1;}');
+.keyframes(~'modalBgFadeOut, from {opacity: 1;} to {opacity: 0;}');
+
+.modal {
+  .content {
+    .animation(modalFlyIn .5s);
+    .animation-fill-mode(forwards);
+    position: fixed;
+    left: 50%;
+    // top: 50%;
+    .translate(-50%, -50%);
+    padding: 20px;
+    min-width: 300px;
+    z-index: 2000;
+    background-color: white;
+
+  }
+
+  &.hide {
+    .content {
+      .animation(modalFlyOut .5s);
+      top: 150%;
+    }
+    &::after {
+      .animation(modalBgFadeOut 1s);
+      opacity: 0;
+    }
+  }
+
+  &::after {
+    .animation(modalBgFadeIn 1s);
+    content: " ";
+    display: block;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100vw;
+    height: 100vw;
+    background-color: rgba(0,0,0,.8);
+    z-index: 1000;
+  }
+
+  p {
+    margin: 0 0 1.5em 0;
+    font-size: 1.5em;
+  }
+
+  .form {
+    margin-left: 10px;
+
+    input[type=text] {
+      @border-bottom: grey;
+
+      border: none;
+      border-bottom: 1px solid @border-bottom;
+      outline: none;
+      padding-left: 5px;
+      font-size: 1.2em;
+      //display: block;
+      float: left;
+      clear: both;
+
+      &:focus {
+        border-bottom-color: darken(@border-bottom, 20%);
+      }
+    }
+
+    input[type=submit] {
+      @bg-color-default: lighten(grey, 20%);
+
+      border: none;
+      outline: none;
+      background-color: @bg-color-default;
+      float: right;
+      clear: both;
+      margin: 10px;
+      padding: 10px;
+      cursor: pointer;
+      font-size: 1em;
+
+      &:focus, &:hover {
+        transition: all .5s;
+        background-color: darken(@bg-color-default, 10%);
+      }
+    }
+  }
+}

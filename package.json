@@ -47,6 +47,7 @@
     "postcss": "^4.0.0",
     "pretty-hrtime": "^0.2.2",
     "react": "^0.12.1",
+    "react-modal": "0.0.7",
     "reactify": "^0.17.1",
     "require-dir": "^0.1.0",
     "vinyl-source-stream": "^1.0.0",
