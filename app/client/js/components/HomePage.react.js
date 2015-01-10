@@ -14,7 +14,7 @@ export class HomePage {
 					div({ className: 'image onScreen ' + this.props.name }),
 					div({ className: 'text' },
 						h3(null, this.props.title),
-						this.props.content));				
+						p(null, this.props.content)));
 			}
 		}
 
