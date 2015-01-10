@@ -109,10 +109,10 @@ export class Client extends EventEmitter {
 				this._chatActions.receiveMessage(msg, chatId, guid.v4());
 			});
 
-			buddy.on('io', (msg, meta) => {
+			buddy.on('io', (message, meta) => {
 				let msg = {
 					'type': 'message',
-					'message': msg,
+					'message': message,
 					'chat-id': chatId
 				};
 				this._sendMessage(msg);
