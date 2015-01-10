@@ -1,19 +1,11 @@
 # Suseprime
 
 ## Requirments
-You need to have installed emscripten, cmake and c++ compiler.
+You need to have installed npm and gulp.
 
 ##How to build
 
 ```
-mkdir -pv builds/library-{c++,emscripten}
-cd builds/library-c++
-cmake ../../library
-cd ../../
-cd builds/library-emscripten
-emcmake cmake ../../library -DCMAKE_BUILD_TYPE=Release
+npm install
+gulp
 ```
-
-Release == -O2 + other optimilizations
-
-Then just run make in builds/library-c++ for console build and builds/library-emscripten for browser build
