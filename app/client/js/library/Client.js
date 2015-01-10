@@ -4,26 +4,18 @@ import EventEmitter from 'events';
 
 export class Client extends EventEmitter {
 	constructor() {
-		let serverKey = new DSA();
-		let clientKey = new DSA();
+		let key = new DSA();
 
 		this._server = {
-			key: serverKey,
+			key: key,
 			otr: new OTR({
 				fragment_size: 140,
 				send_interval: 200,
-				priv: serverKey
+				priv: key
 			})
 		}
 
-		this._client = {
-			key: clientKey,
-			otr: new OTR({
-				fragment_size: 140,
-				send_interval: 200,
-				priv: clientKey
-			})
-		}
+		this._clients = {};
 
 		this._server.otr.on('ui', this._messageReceived);
 
@@ -65,7 +57,7 @@ export class Client extends EventEmitter {
 		let message = await this._waitForMessageWithId(this._sendMessage(data));
 
 		if (message.type == 'error') {
-			throw new Exception("Server responded with error", message);			
+			throw new Exception("Server responded with error", message);
 		} else if (message.type != type) {
 			throw new Exception("Server responded with unknow message", message)
 		} else {
@@ -76,7 +68,6 @@ export class Client extends EventEmitter {
 	_messageReceived(message, encrypted) {
 		try {
 			let body = JSON.parse(message);
-			
 			this.emit('message', body);
 
 			if(body.type == 'message') {
@@ -88,7 +79,8 @@ export class Client extends EventEmitter {
 	}
 
 	_handleChatMessage(body) {
-
+		let msg = body.message;
+		this._clients[body['chat-id']].receiveMsg(msg);
 	}
 
 	async signin(name, password) {
@@ -121,7 +113,30 @@ export class Client extends EventEmitter {
 			'chat-id': chatId
 		}
 
-		return await this._sendMessageAndWaitForResponse(msg, 'chat-established')
+		let body = await this._sendMessageAndWaitForResponse(msg, 'chat-established');
+		let chatId = body['chat-id'];
+		this._clients[chatId] = new OTR({
+			fragment_size: 140,
+			send_interval: 200,
+			priv: key
+		});
+
+		buddy.on('ui', (msg, encrypted) => {
+			this.emit('user-message', msg);
+		});
+
+		buddy.on('io', (msg, meta) => {
+			let msg = {
+				'type': 'message',
+				'message': msg,
+				'chat-id': chatId
+			};
+			this._sendMessage(msg);
+		});
+
+		this._clients[chatId].REQUIRE_ENCRYPTION = true;
+		this._clients[chatId].sendQueryMsg();
+		return true;
 	}
 
 	async status() {
