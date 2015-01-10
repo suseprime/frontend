@@ -45,40 +45,18 @@ export class ChatActions {
 
 		this._dispatcher.handleViewAction(ActionTypes.SEND_MESSAGE, {
 			message: message,
-			messageId: messageId
+			messageId: messageId,
 			chatId: chatId
 		});
 
 		this._client.message(chatId, message, messageId).then((resp) => {
 			this._dispatcher.handleViewAction(ActionTypes.SEND_MESSAGE_COMPLETE, {
 				message: message,
-				message: messageId,
+				messageId: messageId,
 				chatId: chatId
 			});
-		}, (err) {
+		}, (err) => {
 			this._dispatcher.handleViewAction(ActionTypes.SEND_MESSAGE_FAIL, err);
 		});
-	}
-
-	receiveMessage(message, chatId, messageId) {
-		this._dispatcher.handleViewAction(ActionTypes.RECEIVE_MESSAGE, {
-			message: message,
-			chatId: chatId,
-			messageId: messageId
-		})
-	}
-
-	chatRequested(chatId, fromName) {
-		this._dispatcher.handleServerAction(AppConstants.CHAT_REQUESTED, {
-			fromName: fromName,
-			chatId: chatId
-		});
-	}
-
-	chateEstablished(chatId, targetName) {
-		this._dispatcher.handleServerAction(AppConstants.CHAT_ESTABLISHED, { 
-			chatId: chatId,
-			targetName: targetName
-		});		
 	}
 }

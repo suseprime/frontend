@@ -12,25 +12,22 @@ export class UserStateStore extends BaseStore {
 
 		this._notificationActions = notificationActions;
 
-		this.listenOnAction(ActionTypes.LOGIN, this.onLoginStarted);
-		this.listenOnAction(ActionTypes.LOGIN_COMPLETE, this.onLoginCompleted);
-		this.listenOnAction(ActionTypes.LOGIN_FAIL, this.onLoginFailed);
+		this.listenOnAsyncAction(ActionTypes.SIGNIN, this.onSignInStarted, this.onSignInCompleted, this.onSignInFailed);
 
-		this.loginState = 'null';
+		this.signInState = 'null';
 	}
 
 
-
-	onLoginStarted(data) {
-		this.loginState = 'init';
+	onSignInStarted(data) {
+		this.signInState = 'init';
 	}
 
-	onLoginCompleted(data) {
-		this.loginState = 'complete';
+	onSignInCompleted(data) {
+		this.signInState = 'complete';
 	}
 
-	onLoginFailed(data) {
-		this.loginState = 'fail';
+	onSignInFailed(data) {
+		this.signInState = 'fail';
 
 		this._runAfter(() => {
 			this._notificationActions.error('Logging on server have failed')

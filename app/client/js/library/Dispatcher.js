@@ -1,6 +1,6 @@
 const Dispatcher = require('flux').Dispatcher;
 import { Provide } from '../../../external/di';
-import { PayloadSource } from '../constants/AppConstants';
+import { PayloadSources } from '../constants/AppConstants';
 
 @Provide(Dispatcher)
 export class SuseDispatcher extends Dispatcher {
@@ -10,7 +10,7 @@ export class SuseDispatcher extends Dispatcher {
 
 	handleServerAction(type, data) {
 		this.dispatch({
-			source: PayloadSource.SERVER_ACTION,
+			source: PayloadSources.SERVER_ACTION,
 			action: {
 				type: type,
 				data: data
@@ -18,9 +18,9 @@ export class SuseDispatcher extends Dispatcher {
 		});
 	}
 
-	handleViewAction(action) {
+	handleViewAction(type, data) {
 		this.dispatch({
-			source: PayloadSource.VIEW_ACTION,
+			source: PayloadSources.VIEW_ACTION,
 			action: {
 				type: type,
 				data: data
@@ -28,9 +28,9 @@ export class SuseDispatcher extends Dispatcher {
 		});
 	}
 
-	handleOTRAction(action) {
+	handleOTRAction(type, data) {
 		this.dispatch({
-			source: PayloadSource.OTR_ACTION,
+			source: PayloadSources.OTR_ACTION,
 			action: {
 				type: type,
 				data: data

@@ -52,8 +52,13 @@ module.exports = {
 	},
 	vendor: {
 		files: [
-			'node_modules/es6ify/node_modules/traceur/bin/traceur-runtime.js'
+			'node_modules/es6ify/node_modules/traceur/bin/traceur-runtime.js',
+			'node_modules/otr/build/otr.min.js',
+			'node_modules/otr/build/otr.js',
+			'node_modules/otr/build/dep/bigint.js',
+			'node_modules/otr/build/dep/crypto.js',
+			'node_modules/otr/build/dep/eventemitter.js'
 		],
-		dest: dest
+		dest: dest + '/vendor'
 	}
 };

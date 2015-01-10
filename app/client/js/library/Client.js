@@ -1,10 +1,9 @@
-import { OTR, DSA } from 'otr';
 import guid from 'node-uuid';
 import EventEmitter from 'events';
 import { Inject } from '../../../external/di';
-import { ChatActions } from '../actions/ChatActions';
+import { ServerChatActions } from '../actions/ServerChatActions';
 
-@Inject(ChatActions)
+@Inject(ServerChatActions)
 export class Client extends EventEmitter {
 	constructor(chatActions) {
 		let key = new DSA();
@@ -24,6 +23,8 @@ export class Client extends EventEmitter {
 		this._server.otr.on('ui', this._messageReceived);
 
 		this._server.otr.on('io', (msg, meta) => {
+			console.log('to WS', msg)
+
 			if (this._ws != null && this._status != 'opened') {
 				this._ws.send(msg);
 			}
@@ -47,18 +48,22 @@ export class Client extends EventEmitter {
 		});
 	}
 
-	_sendMessage(data) {
+	async _sendMessage(data) {
+		await this._ws_promise;
+		
 		let id = guid.v4()
 
 		data['request-id'] = id;
 
-		this._server.otr.sendMsg(JSON.stringify(message));
+		this._server.otr.sendMsg(JSON.stringify(data));
 
 		return id;
 	}
 
 	async _sendMessageAndWaitForResponse(data, type) {
 		let message = await this._waitForMessageWithId(this._sendMessage(data));
+
+		console.log(message);
 
 		if (message.type == 'error') {
 			throw new Exception("Server responded with error", message);
@@ -153,21 +158,21 @@ export class Client extends EventEmitter {
 		}
 
 		let body = await this._sendMessageAndWaitForResponse(msg, 'chat-established');
-		let chatId = body['chat-id'];
+		chatId = body['chat-id'];
 		this._clients[chatId] = new OTR({
 			fragment_size: 140,
 			send_interval: 200,
 			priv: key
 		});
 
-		buddy.on('ui', (msg, encrypted) => {
-			this._chatActions.receiveMessage(msg, chatId, guid.v4());
+		buddy.on('ui', (message, encrypted) => {
+			this._chatActions.receiveMessage(message, chatId, guid.v4());
 		});
 
-		buddy.on('io', (msg, meta) => {
+		buddy.on('io', (message, meta) => {
 			let msg = {
 				'type': 'message',
-				'message': msg,
+				'message': message,
 				'chat-id': chatId
 			};
 			this._sendMessage(msg);
@@ -225,16 +230,22 @@ export class Client extends EventEmitter {
 		this._ws = new WebSocket(this._host);
 		this._status = 'init';
 
-		this._ws.onopen = () => {
-			this._status = 'opened'
-		}
+		this._ws_promise = new Promise((res, rej) => {
+			this._ws.onopen = () => {
+				this._server.otr.sendQueryMsg();
+				this._status = 'opened';
+
+				setTimeout(() => res(), 0);
+			}
+		});
 
 		this._ws.onerror = (d) => {
 			console.error(d);
 		}
 
 		this._ws.onmessage = (data) => {
-			this._server.otr.receiveMsg(data)
+			console.log("from WS", data.data);
+			this._server.otr.receiveMsg(data.data);
 		}
 
 		this._ws.onclose = () => {

@@ -16,13 +16,19 @@ export class UserActions {
 			password: password
 		});
 
+		console.log(name);
+
 		this._client.signin(name, password).then((resp) => {
 			this._dispatcher.handleViewAction(ActionTypes.SIGNIN_COMPLETE, {
 				name: name,
 				password: password
 			});
-		}, (err) {
+
+			console.log(resp);
+		}, (err) => {
 			this._dispatcher.handleViewAction(ActionTypes.SIGNIN_FAIL, err);
+
+			console.error(err);
 		});
 	}
 

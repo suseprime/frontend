@@ -27,9 +27,9 @@ export const ActionTypes = keyMirror({
 	SEND_MESSAGE_COMPLETE: null,
 	SEND_MESSAGE_FAIL: null,
 
-	LOGOUT: null,
-	LOGOUT_COMPLETE: null,
-	LOGOUT_FAIL: null,
+	SIGNOUT: null,
+	SIGNOUT_COMPLETE: null,
+	SIGNOUT_FAIL: null,
 
 	ADD_NOTIFICATION: null,
 	REMOVE_NOTIFICATION: null,

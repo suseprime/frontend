@@ -17,11 +17,11 @@ export class BaseStore extends EventEmitter {
 		if (this._listeners[action.type]) {
 			var l = this._listeners[action.type];
 
-			Dispatcher.waitFor(l.waitFor || [])
+			this._dispatcher.waitFor(l.waitFor || [])
 
 			l.listener(action);
 
-			if (l._listeners[action.type].notify) {
+			if (l.notify) {
 				this._notify();
 			}
 		} else if (this._notifiers[action.type]) {
@@ -39,6 +39,20 @@ export class BaseStore extends EventEmitter {
 
 	listenOnAction(name, func, notify = true, waitFor = []) {
 		this._listeners[name] = { listener: func.bind(this), notify: notify, waitFor: waitFor };
+	}
+
+	listenOnAsyncAction(name, funcOnInit, funcOnComplete, funcOnFail) {
+		let fn = (n, f) => {
+			if (typeof f == 'function') {
+				this.listenOnAction(name + n, f);
+			} else {
+				this.listenOnAction(name + n, f.func, f.notify, f.waitFor);
+			}
+		}
+
+		fn('', funcOnInit);
+		fn('_COMPLETE', funcOnComplete);
+		fn('_FAIL', funcOnFail);
 	}
 
 	unlistenOnAction(name) {
