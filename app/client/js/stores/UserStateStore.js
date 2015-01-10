@@ -1,31 +1,36 @@
 const Dispatcher = require('flux').Dispatcher;
-import { CHANGE_EVENT, ActionTypes } from '../constants/AppConstants';
+import { ActionTypes } from '../constants/AppConstants';
 import EventEmitter from 'events';
 import { BaseStore } from './BaseStore';
 import { Inject } from '../../../external/di';
+import { NotificationActions } from '../actions/NotificationActions';
 
-@Inject(Dispatcher)
+@Inject(Dispatcher, NotificationActions)
 export class UserStateStore extends BaseStore {
-	constructor(dispatcher) {
+	constructor(dispatcher, notificationActions) {
 		super(dispatcher);
-		
+
+		this._notificationActions = notificationActions;
+
 		this.listenOnAction(ActionTypes.LOGIN, this.onLoginStarted);
 		this.listenOnAction(ActionTypes.LOGIN_COMPLETE, this.onLoginCompleted);
 		this.listenOnAction(ActionTypes.LOGIN_FAIL, this.onLoginFailed);
 
-		this.state = null;
+		this.loginState = 'null';
 	}
 
+
+
 	onLoginStarted(data) {
-		this.state = 'init';
+		this.loginState = 'init';
 	}
 
 	onLoginCompleted(data) {
-		this.state = 'complete';
+		this.loginState = 'complete';
 	}
 
 	onLoginFailed(data) {
-		this.state = 'fail';
+		this.loginState = 'fail';
 
 		this._runAfter(() => {
 			this._notificationActions.error('Logging on server have failed')

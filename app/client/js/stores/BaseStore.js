@@ -60,4 +60,12 @@ export class BaseStore extends EventEmitter {
 	get dispatchToken() {
 		return this._dispatchToken;
 	}
+
+	listen(...args) {
+		this.on(...args);
+	}
+
+	unlisten(...args) {
+		this.removeListener(...args);
+	}
 }

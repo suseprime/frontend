@@ -4,6 +4,8 @@ export class Element {
 	constructor() {
 		this._createDefaultTags();
 
+		this['CSSTransitionGroup'] = this._createTag(require('react/lib/ReactCSSTransitionGroup'));
+
 		this._cachedFactories = {};
 	}
 

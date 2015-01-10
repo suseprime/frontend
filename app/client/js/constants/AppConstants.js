@@ -29,5 +29,12 @@ export const ActionTypes = keyMirror({
 	LOGOUT_FAIL: null,
 
 	ADD_NOTIFICATION: null,
-	REMOVE_NOTIFICATION: null
+	REMOVE_NOTIFICATION: null,
+	CLICK_NOTIFICATION: null
+});
+
+export const PayloadSources = keyMirror({
+	SERVER_ACTION: null,
+	VIEW_ACTION: null,
+	OTR_ACTION: null
 });
