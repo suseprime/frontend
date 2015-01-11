@@ -23,7 +23,8 @@ module.exports = {
 	browserSync: {
 		server: {
 			baseDir: [ dest ]
-		}
+		},
+		ghostMode: false
 	},
 	images: {
 		src: src + "/client/images/**",
@@ -40,6 +41,7 @@ module.exports = {
 	},
 	less: {
 		src: src + '/client/less/main.less',
+		toWatch: src + '/client/less/**',
 		dest: dest,
 		settings: {
 			paths: [ src + '/less/includes' ],
