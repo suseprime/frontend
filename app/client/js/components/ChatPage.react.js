@@ -76,11 +76,11 @@ export class ChatPage {
 				let content = null;
 
 				if (state == 'established') {
-					content = div(null,
+					content = div({ className: "other" },
 						div({ className: "content" }, MessagesList({ chat: ch })),
 							form({ onSubmit: this.onFormSubmit, className: "form" },
 								textarea({ ref: 'message' }),
-								input({ type: 'submit', value: 'Send' })));	
+								input({ type: 'submit', value: 'Send' })));
 				} else if (state == 'requested') {
 					content = div(null,
 						div({ className: "content" },
@@ -174,7 +174,7 @@ export class ChatPage {
 						h1(null, "Suseprime"),
 						div({ className: "right" },
 							a({ href: "#", onClick: this.onSignOutClick }, "Logout")),
-						div({ className: "second-row" }, 
+						div({ className: "second-row" },
 							a({ href: "#", onClick: this.onAddChatClick }, "+"))),
 					div({ className: "chats" },
 						chatStore.chats.map(x => Chat({ chat: x })).toArray()));
