@@ -31,7 +31,7 @@ export class ChatPage {
 			render() {
 				return div(null, messageStore.getMessages(this.props.chat.get('id')).map((x) => {
 					return div({ className: "message" + (x.get('my') ? " my" : "") }, x.get('message'));
-				}));
+				}).toArray());
 			}
 		}
 
