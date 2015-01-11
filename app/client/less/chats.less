@@ -111,8 +111,24 @@
               float: right;
             }
           }
-        }
 
+          &.text {
+            .display(flex);
+
+            p {
+              .flex-grow(1);
+              text-align: center;
+              width: 100%;
+              font-size: 30px;
+              // .translateY(50%);
+              margin: auto 0;
+
+              a {
+                text-decoration: underline;
+              }
+            }
+          }
+        }
 
         .form {
           box-sizing: content-box;

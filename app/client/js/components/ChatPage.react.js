@@ -82,15 +82,15 @@ export class ChatPage {
 								textarea({ ref: 'message' }),
 								input({ type: 'submit', value: 'Send' })));
 				} else if (state == 'requested') {
-					content = div(null,
-						div({ className: "content" },
-							a({ onClick: this.onAcceptRequestClick }, "Accept request")));
+					content = div({ className: "other" },
+						div({ className: "content text" },
+							p({ className: "accept-request" }, a({ onClick: this.onAcceptRequestClick }, "Accept request"))));
 				} else if (state == 'waiting') {
-					content = div(null,
-						div({ className: "content" }, "Waiting"));
+					content = div({ className: "other" },
+						div({ className: "content text" }, p({ className: 'waiting' }, "Waiting")));
 				} else {
-					content = div(null,
-						div({ className: "content" }, "Preparing"));
+					content = div({ className: "other" },
+						div({ className: "content text" }, p({ className: 'preparing' }, "Preparing")));
 				}
 
 				return div({ className: "chat" },
