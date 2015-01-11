@@ -37,6 +37,51 @@ export class ChatPage {
 
 		const MessagesList = React.createFactory(React.createClass(_MessagesList.prototype));
 
+		class _ChatForm {
+			get displayName() { return "ChatForm" }
+
+			getInitialState() {
+				return { text: '' }
+			}
+
+			onTextChange(e) {
+				this.setState({ text: e.target.value });
+			}
+
+			trySendMessage() {
+				let message = this.state.text.trim();
+
+				if (message.length == 0)
+					return;
+
+				this.setState({ text: '' });
+
+				chatActions.message(message, this.props.chat.get('id'));
+			}
+
+			onKeyDown(e) {
+				if (event.keyCode == 13) {
+					e.preventDefault()
+
+					this.trySendMessage();
+				}
+			}
+
+			onFormSubmit(e) {
+				e.preventDefault();
+
+				this.trySendMessage();
+			}
+
+			render() {
+				return form({ onSubmit: this.onFormSubmit, className: "form" },
+					textarea({ ref: 'message', value: this.state.text, onChange: this.onTextChange, onKeyDown: this.onKeyDown }),
+					input({ type: 'submit', value: 'Send' }))
+			}
+		}
+
+		const ChatForm = React.createFactory(React.createClass(_ChatForm.prototype));
+
 		class _Chat {
 			get displayName() { return "Chat" }
 
@@ -54,17 +99,6 @@ export class ChatPage {
 				this.forceUpdate();
 			}
 
-			onFormSubmit(e) {
-				e.preventDefault();
-
-				let message = this.refs['message'].getDOMNode().value;
-
-				if (message.length == 0)
-					return;
-
-				chatActions.message(message, this.props.chat.get('id'));
-			}
-
 			onAcceptRequestClick() {
 				chatActions.acceptChatRequest(this.props.chat.get('id'));
 			}
@@ -77,10 +111,7 @@ export class ChatPage {
 
 				if (state == 'established') {
 					content = div({ className: "other" },
-						div({ className: "content" }, MessagesList({ chat: ch })),
-							form({ onSubmit: this.onFormSubmit, className: "form" },
-								textarea({ ref: 'message' }),
-								input({ type: 'submit', value: 'Send' })));
+						div({ className: "content" }, MessagesList({ chat: ch })), ChatForm({ chat: ch }));
 				} else if (state == 'requested') {
 					content = div({ className: "other" },
 						div({ className: "content text" },
