@@ -1,6 +1,7 @@
 var reactify = require('reactify');
 var envify = require('envify');
 var es6ify = require('es6ify');
+var stringify = require('stringify');
 var LessPluginAutoPrefix = require('less-plugin-autoprefix'),
     autoprefix= new LessPluginAutoPrefix({browsers: ["last 2 versions"]});
 
@@ -35,7 +36,7 @@ module.exports = {
 			outputName: 'app.js',
 			require: [ 'react', 'lodash' ]
 		}],
-		transform: [ es6ify, envify ]
+		transform: [ stringify({ extensions: [ '.svg' ] }), es6ify, envify ]
 	},
 	less: {
 		src: src + '/client/less/main.less',

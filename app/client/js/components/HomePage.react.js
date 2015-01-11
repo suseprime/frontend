@@ -2,7 +2,8 @@ const React = require('react')
 import { Inject } from '../../../external/di';
 import { Element } from '../library/react/element.js';
 import { UserStateStore } from '../stores/UserStateStore';
-import { UserActions } from '../actions/UserActions'
+import { UserActions } from '../actions/UserActions';
+import Loading from 'react-loading/dist/react-loading.js'
 
 @Inject(Element, UserStateStore, UserActions)
 export class HomePage {
@@ -53,7 +54,9 @@ export class HomePage {
 
 				switch(userStateStore.signInState) {
 					case 'init':
-						progress = p(null, 'Loading');
+						progress = div({
+							className: 'loading'
+						}, React.createElement(Loading, { type: 'spinning-bubbles', color: '#efefef' }));
 						break;
 					case 'fail':
 						progress = p(null, 'There was some error');
