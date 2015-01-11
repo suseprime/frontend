@@ -7,10 +7,11 @@ import { ChatStore } from '../stores/ChatStore';
 import { ChatActions } from '../actions/ChatActions';
 import { MessageStore } from '../stores/MessageStore';
 import Modal from 'react-modal'
+import { Loading } from './Loading.react'
 
-@Inject(Element, UserStateStore, UserActions, ChatStore, ChatActions, MessageStore)
+@Inject(Element, UserStateStore, UserActions, ChatStore, ChatActions, MessageStore, Loading)
 export class ChatPage {
-	constructor(elements, userStateStore, userActions, chatStore, chatActions, messageStore) {
+	constructor(elements, userStateStore, userActions, chatStore, chatActions, messageStore, loading) {
 		let { div, nav, h1, a, form, input, textarea, p } = elements;
 
 		class _MessagesList {
@@ -30,7 +31,13 @@ export class ChatPage {
 
 			render() {
 				return div(null, messageStore.getMessages(this.props.chat.get('id')).map((x) => {
-					return div({ className: "message" + (x.get('my') ? " my" : "") }, x.get('message'));
+					var s = null;
+
+					if (x.get('state') == 'sending') {
+						s = [ ' ',  loading.component({ height: 15, width: 15, type: 'spinning-bubbles', color: '#3e3e3e' }) ]
+					}
+
+					return div({ className: "message" + (x.get('my') ? " my" : "") }, x.get('message'), s);
 				}).toArray());
 			}
 		}
