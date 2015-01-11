@@ -3,11 +3,11 @@ import { Inject } from '../../../external/di';
 import { Element } from '../library/react/element.js';
 import { UserStateStore } from '../stores/UserStateStore';
 import { UserActions } from '../actions/UserActions';
-import Loading from 'react-loading/dist/react-loading.js'
+import { Loading } from './Loading.react'
 
-@Inject(Element, UserStateStore, UserActions)
+@Inject(Element, UserStateStore, UserActions, Loading)
 export class HomePage {
-	constructor(elements, userStateStore, userActions) {
+	constructor(elements, userStateStore, userActions, loading) {
 		let { div, h1, h3, p, form, input, footer } = elements;
 
 		class _Row {
@@ -56,7 +56,7 @@ export class HomePage {
 					case 'init':
 						progress = div({
 							className: 'loading'
-						}, React.createElement(Loading, { type: 'spinning-bubbles', color: '#efefef' }));
+						}, loading.component({ type: 'spinning-bubbles', color: '#efefef' }));
 						break;
 					case 'fail':
 						progress = p(null, 'There was some error');
