@@ -5,7 +5,7 @@ import { Inject } from '../../../external/di';
 import { NotificationActions } from '../actions/NotificationActions';
 
 @Inject(Dispatcher, NotificationActions)
-export class UserStateStore extends BaseStore {
+export class UserStore extends BaseStore {
 	constructor(dispatcher, notificationActions) {
 		super(dispatcher);
 
@@ -15,12 +15,14 @@ export class UserStateStore extends BaseStore {
 		this.listenOnAsyncAction(ActionTypes.SIGNOUT, this.onSignOutStarted, this.onSignOutCompleted, this.onSignOutFailed);
 
 		this.signInState = 'null';
+		this.nick = undefined;
 	}
 
 	onSignOutStarted(data) {}
 
 	onSignOutCompleted(data) {
 		this.signInState = 'null';
+		this.nick = undefined;
 	}
 
 	onSignOutFailed(data) {
@@ -29,6 +31,7 @@ export class UserStateStore extends BaseStore {
 
 	onSignInStarted(data) {
 		this.signInState = 'init';
+		this.nick = data.data.name;
 	}
 
 	onSignInCompleted(data) {

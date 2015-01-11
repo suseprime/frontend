@@ -1,7 +1,7 @@
 const React = require('react')
 import { Inject } from '../../../external/di';
 import { Element } from '../library/react/element.js';
-import { UserStateStore } from '../stores/UserStateStore';
+import { UserStore } from '../stores/UserStore';
 import { UserActions } from '../actions/UserActions';
 import { ChatStore } from '../stores/ChatStore';
 import { ChatActions } from '../actions/ChatActions';
@@ -9,9 +9,9 @@ import { MessageStore } from '../stores/MessageStore';
 import Modal from 'react-modal'
 import { Loading } from './Loading.react'
 
-@Inject(Element, UserStateStore, UserActions, ChatStore, ChatActions, MessageStore, Loading)
+@Inject(Element, UserStore, UserActions, ChatStore, ChatActions, MessageStore, Loading)
 export class ChatPage {
-	constructor(elements, userStateStore, userActions, chatStore, chatActions, messageStore, loading) {
+	constructor(elements, userStore, userActions, chatStore, chatActions, messageStore, loading) {
 		let { div, nav, h1, a, form, input, textarea, p } = elements;
 
 		class _MessagesList {
@@ -211,7 +211,7 @@ export class ChatPage {
 					nav(null,
 						h1(null, "Suseprime"),
 						div({ className: "right" },
-							a({ href: "#", onClick: this.onSignOutClick }, "Logout")),
+							a({ href: "#", onClick: this.onSignOutClick }, userStore.nick + ": Logout")),
 						div({ className: "second-row" },
 							a({ href: "#", onClick: this.onAddChatClick }, "+"))),
 					div({ className: "chats" },

@@ -1,12 +1,12 @@
 const React = require('react')
 import { Inject } from '../../../external/di';
 import { Element } from '../library/react/element.js';
-import { UserStateStore } from '../stores/UserStateStore';
+import { UserStore } from '../stores/UserStore';
 import { UserActions } from '../actions/UserActions';
 import { NotificationActions } from '../actions/NotificationActions';
 import { Loading } from './Loading.react'
 
-@Inject(Element, UserStateStore, UserActions, Loading, NotificationActions)
+@Inject(Element, UserStore, UserActions, Loading, NotificationActions)
 export class HomePage {
 	constructor(elements, userStateStore, userActions, loading, notificationActions) {
 		let { div, h1, h3, p, form, input, footer } = elements;
