@@ -3,11 +3,12 @@ import { Inject } from '../../../external/di';
 import { Element } from '../library/react/element.js';
 import { UserStateStore } from '../stores/UserStateStore';
 import { UserActions } from '../actions/UserActions';
+import { NotificationActions } from '../actions/NotificationActions';
 import { Loading } from './Loading.react'
 
-@Inject(Element, UserStateStore, UserActions, Loading)
+@Inject(Element, UserStateStore, UserActions, Loading, NotificationActions)
 export class HomePage {
-	constructor(elements, userStateStore, userActions, loading) {
+	constructor(elements, userStateStore, userActions, loading, notificationActions) {
 		let { div, h1, h3, p, form, input, footer } = elements;
 
 		class _Row {
@@ -46,6 +47,8 @@ export class HomePage {
 				
 				if (val.length > 3) {
 					userActions.signin(val);
+				} else {
+					notificationActions.error('Nick has to be longer than three characters.');
 				}
 			}
 

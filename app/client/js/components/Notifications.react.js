@@ -2,11 +2,12 @@ const React = require('react')
 import { Inject } from '../../../external/di';
 import { Element } from '../library/react/element.js';
 import { NotificationsStore } from '../stores/NotificationsStore';
+import { NotificationActions } from '../actions/NotificationActions';
 
-@Inject(Element, NotificationsStore)
+@Inject(Element, NotificationsStore, NotificationActions)
 export class Notifications {
 	constructor(elements, store, notificationActions) {
-		let { div, span, i, CSSTransitionGroup } = elements;
+		let { div, span, i } = elements;
 
 		class _Notificatons {
 			get displayName() { return "Notifications" }
@@ -30,16 +31,15 @@ export class Notifications {
 
 			render() {
 				return div({ className: 'notifications' },
-					CSSTransitionGroup({ transitionName: 'notification', component: 'div' },
-						store.getAll().map((x, i) => this.renderNotification(x))));
+					store.getAll().map((x, i) => this.renderNotification(x)).toArray());
 			}
 
 			renderNotification(notification) {
-				return div({ 
+				return div({
 					key: notification.get('id'),
 					className: notification.get('type') + ' notification',
 					onClick: this.onNotificationClick.bind(this, notification.get('id'))
-				}, span({ className: 'text' }, notification.get('text')));
+				}, span({ className: 'message' }, notification.get('message')));
 			}
 		}
 

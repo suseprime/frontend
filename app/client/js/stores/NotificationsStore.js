@@ -17,7 +17,7 @@ export class NotificationsStore extends BaseStore {
 		this.listenOnAction(ActionTypes.REMOVE_NOTIFICATION, this._remove);
 
 		this._data = Immutable.Map();
-		this._removeInterval = 4 * 1000;
+		this._removeInterval = 5 * 1000;
 	}
 
 	_add(payload) {
@@ -27,6 +27,7 @@ export class NotificationsStore extends BaseStore {
 		this._data = this._data.set(id, Immutable.Map({
 			message: message,
 			type: type || 'info',
+			id: id
 		}));
 
 		setTimeout(() => { this._notificationActions.remove(id) }, this._removeInterval);
