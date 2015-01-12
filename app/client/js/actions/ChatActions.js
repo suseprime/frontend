@@ -47,6 +47,44 @@ export class ChatActions {
 		}).catch(x => console.error(x));
 	}
 
+	async rejectChatRequest(chatId) {
+		this._dispatcher.handleViewAction(ActionTypes.REJECT_CHAT_REQUEST, {
+			chatId: chatId
+		});
+
+		try {
+			let resp = await this._client.rejectChat(chatId);
+
+			this._dispatcher.handleViewAction(ActionTypes.REJECT_CHAT_REQUEST_COMPLETE, {
+				chatId: chatId
+			});
+		} catch (e) {
+			this._dispatcher.handleViewAction(ActionTypes.REJECT_CHAT_REQUEST_FAIL, {
+				chatId: chatId,
+				error: e
+			})
+		}
+	}
+
+	async closeChatRequest(chatId) {
+		this._dispatcher.handleViewAction(ActionTypes.CLOSE_CHAT_REQUEST, {
+			chatId: chatId
+		});
+
+		try {
+			let resp = await this._client.closeChat(chatId);
+
+			this._dispatcher.handleViewAction(ActionTypes.CLOSE_CHAT_REQUEST_COMPLETE, {
+				chatId: chatId
+			});
+		} catch (e) {
+			this._dispatcher.handleViewAction(ActionTypes.CLOSE_CHAT_REQUEST_FAIL, {
+				chatId: chatId,
+				error: e
+			});
+		}
+	}
+
 	selectChat(chatId) {
 		this._dispatcher.handleViewAction(ActionTypes.SELECT_CHAT, {
 			'id': chatId

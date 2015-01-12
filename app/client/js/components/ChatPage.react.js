@@ -92,22 +92,18 @@ export class ChatPage {
 		class _Chat {
 			get displayName() { return "Chat" }
 
-			componentDidMount() {
-				messageStore.listen('change', this.onDataChange);
-				chatStore.listen('change', this.onDataChange);
-			}
-
-			componentWillUnmount() {
-				messageStore.unlisten('change', this.onDataChange);
-				chatStore.unlisten('change', this.onDataChange);
-			}
-
-			onDataChange() {
-				this.forceUpdate();
-			}
-
 			onAcceptRequestClick() {
 				chatActions.acceptChatRequest(this.props.chat.get('id'));
+			}
+
+			onRejectRequestClick() {
+				chatActions.rejectChatRequest(this.props.chat.get('id'));
+			}
+
+			onCloseChatClick() {
+				if (this.props.chat.get('state') == 'established') {
+					chatActions.closeChatRequest(this.props.chat.get('id'));
+				}
 			}
 
 			render() {
@@ -122,7 +118,8 @@ export class ChatPage {
 				} else if (state == 'requested') {
 					content = div({ className: "other" },
 						div({ className: "content text" },
-							p({ className: "accept-request" }, a({ onClick: this.onAcceptRequestClick }, "Accept request"))));
+							p({ className: "accept-request" }, a({ onClick: this.onAcceptRequestClick }, "Accept request")),
+							p({ className: "reject-request" }, a({ onClick: this.onRejectRequestClick }, "Reject request"))));
 				} else if (state == 'waiting') {
 					content = div({ className: "other" },
 						div({ className: "content text" }, p({ className: 'waiting' }, "Waiting")));
@@ -132,7 +129,7 @@ export class ChatPage {
 				}
 
 				return div({ className: "chat" },
-					div({ className: "name" }, ch.get('name')),
+					div({ className: "name" }, ch.get('name'), (this.props.chat.get('state') == 'established') ? [ ' - ', a({ onClick: this.onCloseChatClick }, 'Close') ] : null),
 					content);
 			}
 		}

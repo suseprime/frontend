@@ -30,4 +30,16 @@ export class ServerChatActions {
 			targetName: targetName
 		});		
 	}
+
+	chatClosed(chatId) {
+		this._dispatcher.handleServerAction(ActionTypes.CHAT_CLOSED, {
+			chatId: chatId
+		});
+	}
+
+	chatRejected(chatId) {
+		this._dispatcher.handleServerAction(ActionTypes.CHAT_REJECTED, {
+			chatId: chatId
+		});
+	}
 }

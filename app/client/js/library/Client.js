@@ -13,7 +13,7 @@ export class Client extends EventEmitter {
 		this._server = {
 			key: key,
 			otr: new OTR({
-				fragment_size: 140,
+				fragment_size: 65536,
 				send_interval: 200,
 				priv: key
 			})
@@ -25,6 +25,7 @@ export class Client extends EventEmitter {
 		this._server.otr.on('ui', this._messageReceived.bind(this));
 
 		this._server.otr.on('io', (msg, meta) => {
+			console.log(msg);
 			if (this._ws != null && this._status == 'opened') {
 				this._ws.send(msg);
 			}
@@ -51,9 +52,11 @@ export class Client extends EventEmitter {
 	async _sendMessage(data) {
 		await this._ws_promise;
 		
-		let id = guid.v4()
+		let id = guid.v4();
 
 		data['request-id'] = id;
+
+		console.log(data);
 
 		this._server.otr.sendMsg(JSON.stringify(data));
 
@@ -73,18 +76,31 @@ export class Client extends EventEmitter {
 	_messageReceived(message, encrypted) {
 		try {
 			let body = JSON.parse(message);
+			console.log(body);
 			this.emit('message', body);
 
-			if(body.type == 'message') {
-				this._handleChatMessage(body);
-			} else if (body.type == 'chat-established') {
-				this._handleChatEstablished(body);
-			} else if (body.type == 'chat-request') {
-				this._handleChatRequest(body);
+			let actions = {
+				'message': this._handleChatMessage,
+				'chat-established': this._handleChatEstablished,
+				'chat-request': this._handleChatRequest,
+				'chat-closed': this._handleChatClosed,
+				'chat-rejected': this._handleChatRejected
+			}
+
+			if (actions[body.type] != null) {
+				actions[body.type].call(this, body);
 			}
 		} catch (e) {
 			console.log(e.stack);
 		}
+	}
+
+	_handleChatRejected(body) {
+		this._chatActions.chatRejected(body['chat-id']);
+	}
+
+	_handleChatClosed(body) {
+		this._chatActions.chatClosed(body['chat-id']);
 	}
 
 	_handleChatRequest(body) {
@@ -96,7 +112,7 @@ export class Client extends EventEmitter {
 		if(typeof body['request-id'] === 'undefined') {
 			let chatId = body['chat-id'];
 			this._clients[chatId] = new OTR({
-				fragment_size: 140,
+				fragment_size: 65536,
 				send_interval: 200,
 				priv: this._key
 			});
@@ -111,7 +127,8 @@ export class Client extends EventEmitter {
 				let msg = {
 					'type': 'message',
 					'message': message,
-					'chat-id': chatId
+					'chat-id': chatId,
+					'message-id': guid.v4()
 				};
 				this._sendMessage(msg);
 			});
@@ -149,6 +166,15 @@ export class Client extends EventEmitter {
 		return await this._sendMessageAndWaitForResponse(msg, 'chat-request-sent');
 	}
 
+	async closeChat(chatId) {
+		let msg = {
+			'type': 'close-chat',
+			'chat-id': chatId
+		}
+
+		return await this._sendMessageAndWaitForResponse(msg, 'close-chat-success');
+	}
+
 	async acceptChat(chatId) {
 		let msg = {
 			'type': 'chat-request-accepted',
@@ -158,7 +184,7 @@ export class Client extends EventEmitter {
 		let body = await this._sendMessageAndWaitForResponse(msg, 'chat-request-accepted-successed');
 		chatId = body['chat-id'];
 		this._clients[chatId] = new OTR({
-			fragment_size: 140,
+			fragment_size: 65536,
 			send_interval: 200,
 			priv: this._key
 		});
@@ -173,7 +199,8 @@ export class Client extends EventEmitter {
 			let msg = {
 				'type': 'message',
 				'message': message,
-				'chat-id': chatId
+				'chat-id': chatId,
+				'message-id': guid.v4()
 			};
 			this._sendMessage(msg);
 		});
@@ -183,6 +210,15 @@ export class Client extends EventEmitter {
 		return body;
 	}
 
+	async rejectChat(chatId) {
+		let msg = {
+			'type': 'chat-request-rejected',
+			'chat-id': chatId
+		};
+
+		return await this._sendMessageAndWaitForResponse(msg, 'chat-request-rejected-successed');
+	}
+
 	async status() {
 		let msg = { 'type': 'status' }
 
@@ -190,14 +226,10 @@ export class Client extends EventEmitter {
 	}
 
 	async message(chatId, message, messageId) {
-		let msg = {
-			'type': 'message',
-			'chat-id': chatId,
-			'message-id': messageId,
-			'message': message
-		}
-
-		return await this._sendMessageAndWaitForResponse(msg, 'message-sent');
+		this._clients[chatId].sendMsg(message)
+		
+		return null;
+		//return await this._sendMessageAndWaitForResponse(msg, 'message-sent');
 	}
 
 	async signout(password) {
@@ -243,6 +275,7 @@ export class Client extends EventEmitter {
 		}
 
 		this._ws.onmessage = (data) => {
+			console.log(data.data);
 			this._server.otr.receiveMsg(data.data);
 		}
 
