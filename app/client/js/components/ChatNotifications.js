@@ -1,19 +1,26 @@
+const Dispatcher = require('flux').Dispatcher;
 import { Inject } from '../../../external/di';
 import { MessageStore } from '../stores/MessageStore';
 import { ChatStore } from '../stores/ChatStore';
 import { ActionTypes } from '../constants/AppConstants';
 
-@Inject(MessageStore, ChatStore)
+@Inject(Dispatcher, ChatStore)
 export class ChatNotifications {
-  constructor(messageStore, chatStore) {
+  constructor(dispatcher, chatStore) {
     if('Notification' in window && Notification.permission !== 'denied') {
       Notification.requestPermission((permission) => {
         if(permission === 'granted') {
         }
       });
     }
-    messageStore.listenOnAction(ActionTypes.RECEIVE_MESSAGE, (this.onReceiveMessage).bind(this));
+    
+    dispatcher.register(this._registerEvents.bind(this));
     this._chatStore = chatStore;
+  }
+
+  _registerEvents(payload) {
+    if (payload.action.type == ActionTypes.RECEIVE_MESSAGE)
+      this.onReceiveMessage(payload.action);
   }
 
   onReceiveMessage(data) {
