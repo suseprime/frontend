@@ -6,12 +6,13 @@ import { UserActions } from '../actions/UserActions';
 import { ChatStore } from '../stores/ChatStore';
 import { ChatActions } from '../actions/ChatActions';
 import { MessageStore } from '../stores/MessageStore';
+import { ChatNotifications } from './ChatNotifications';
 import Modal from 'react-modal'
 import { Loading } from './Loading.react'
 
-@Inject(Element, UserStore, UserActions, ChatStore, ChatActions, MessageStore, Loading)
+@Inject(Element, UserStore, UserActions, ChatStore, ChatActions, MessageStore, Loading, ChatNotifications)
 export class ChatPage {
-	constructor(elements, userStore, userActions, chatStore, chatActions, messageStore, loading) {
+	constructor(elements, userStore, userActions, chatStore, chatActions, messageStore, loading, chatNotifications) {
 		let { div, nav, h1, a, form, input, textarea, p } = elements;
 
 		class _MessagesList {
