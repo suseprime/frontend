@@ -109,6 +109,6 @@ export class ChatStore extends BaseStore {
 
 		let chatKey = this._chats.findIndex((x) => x.chatId == chatId);
 
-		this._chats = this._chats.remove(hatKey);
+		this._chats = this._chats.remove(chatKey);
 	}
 }
