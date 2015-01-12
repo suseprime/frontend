@@ -155,7 +155,7 @@ export class Client extends EventEmitter {
 			'chat-id': chatId
 		}
 
-		let body = await this._sendMessageAndWaitForResponse(msg, 'chat-request-accepted-sucessed');
+		let body = await this._sendMessageAndWaitForResponse(msg, 'chat-request-accepted-successed');
 		chatId = body['chat-id'];
 		this._clients[chatId] = new OTR({
 			fragment_size: 140,
