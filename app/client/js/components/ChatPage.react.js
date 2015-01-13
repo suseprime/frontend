@@ -163,7 +163,7 @@ export class ChatPage {
 					p(null, 'Who to chat with?'),
 					form({ className: 'form', onSubmit: this.handleFormSubmit },
 						input({ type: 'text', placeholder: 'Nick', ref: 'name' }),
-						input({ type: 'submit', placeholder: 'Send request' }))));
+						input({ type: 'submit', value: 'Send request' }))));
 			}
 		}
 
