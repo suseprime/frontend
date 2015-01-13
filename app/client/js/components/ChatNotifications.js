@@ -13,7 +13,7 @@ export class ChatNotifications {
         }
       });
     }
-    
+
     dispatcher.register(this._registerEvents.bind(this));
     this._chatStore = chatStore;
   }
@@ -37,7 +37,9 @@ export class ChatNotifications {
       };
       let notification = new Notification(title,  options);
       notification.onclick = () => {
-        console.log('Clicked');
+        window.focus();
+        notification.close();
+
       };
     }
   }
